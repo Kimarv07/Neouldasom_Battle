@@ -9,6 +9,8 @@ UBattleUI::UBattleUI(const FObjectInitializer& ObjectInitializer)
 	:Super(ObjectInitializer){
 	Success = Cast<UImage>(GetWidgetFromName(TEXT("Success")));
 	Fail = Cast<UImage>(GetWidgetFromName(TEXT("Fail")));
+	Win = Cast<UImage>(GetWidgetFromName(TEXT("Success")));
+	Lose = Cast<UImage>(GetWidgetFromName(TEXT("Fail")));
 }
 
 void UBattleUI::CallSystem(){
@@ -36,9 +38,11 @@ void UBattleUI::ShowPassFailCutIn(bool IsSucceed){
 	FTimerHandle CutInTimerHnadle;
 
 	if (IsSucceed) {
- 		Success->SetVisibility(ESlateVisibility::HitTestInvisible);
+ 		Success->SetVisibility(ESlateVisibility::Visible);
 	}
 	else if(!IsSucceed) {
-		Fail->SetVisibility(ESlateVisibility::HitTestInvisible);
+		Fail->SetVisibility(ESlateVisibility::Visible);
 	}
+
+
 }

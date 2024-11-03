@@ -21,20 +21,23 @@ protected:
 
 	//시스템 로더(연동)
 	class ABattleSystem* LoadedSystem;
-	UFUNCTION(BlueprintCallable, Category = "UI")
 	void CallSystem();
 
 	//스킬 적용
 	UFUNCTION(BlueprintCallable, Category = "SkillSelect")
 	void MappingSkills(SubjectClass Subject, int RowNum);
 
-	TSubclassOf<UUserWidget> WidgetClass;
-	UBattleUI* BattleWidgetInstance;
-
+	//스킬 성공 실패 컷인
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta=(BindWidgetOptional))
 	class UImage* Success;
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta = (BindWidget))
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta = (BindWidgetOptional))
 	class UImage* Fail;
+
+	//전투 승리 패배 컷인
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta = (BindWidgetOptional))
+	class UImage* Win;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta = (BindWidgetOptional))
+	class UImage* Lose;
 
 	void ShowPassFailCutIn(bool IsSucceed);
 };

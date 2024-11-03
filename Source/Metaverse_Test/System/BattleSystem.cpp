@@ -3,6 +3,7 @@
 
 #include "System/BattleSystem.h"
 #include "Kismet/GameplayStatics.h"
+#include "../UI/BattleUI.h"
 
 // Sets default values
 ABattleSystem::ABattleSystem(){
@@ -178,6 +179,7 @@ void ABattleSystem::AttackSkill(){
 	else {
 		GEngine->AddOnScreenDebugMessage(-1, 7.0, FColor::Red, "Skill Ready Failed!");
 	}
+
 
 	DependedDamage = 0;
 	ShowDebugLog();
