@@ -16,4 +16,12 @@ class METAVERSE_TEST_API AMonsterCharacter : public ACharacterBase
 	
 private:
 	AMonsterCharacter();
+
+public:
+	bool JudgmentSkill(int score);
+
+	UFUNCTION(BlueprintCallable, Category = "Initialize")
+	void SetHpByPlayer(int HpMax);
+	UFUNCTION(BlueprintCallable, Category = "Initialize")
+	void SetMpByPlayer(int MpMax);
 };

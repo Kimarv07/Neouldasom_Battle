@@ -5,10 +5,16 @@
 #include "Blueprint/UserWidget.h"
 
 ABattlePlayerController::ABattlePlayerController(){
-    static ConstructorHelpers::FClassFinder<UUserWidget> WidgetClassFinder(TEXT("/Game/BattleMap/SampleButton/MyBattleUI.MyBattleUI_C"));
+    static ConstructorHelpers::FClassFinder<UUserWidget> WidgetClassFinder(TEXT("/Game/BattleMap/BattleUI/MyBattleUI.MyBattleUI_C"));
     if (WidgetClassFinder.Succeeded())
     {
         HUDWidgetClass = WidgetClassFinder.Class;
+    }
+
+    static ConstructorHelpers::FClassFinder<UUserWidget> CutInWidgetClassFinder(TEXT("/Game/BattleMap/BattleUI/BattleCutIn.BattleCutIn_C"));
+    if (CutInWidgetClassFinder.Succeeded())
+    {
+        CutInWidgetClass = CutInWidgetClassFinder.Class;
     }
 }
 
@@ -27,5 +33,8 @@ void ABattlePlayerController::BeginPlay(){
 
 void ABattlePlayerController::CreateHUD(){
     HUDWidget = CreateWidget(GetWorld()->GetFirstPlayerController(), HUDWidgetClass);
-    HUDWidget->AddToViewport();
+    HUDWidget->AddToViewport(0);
+
+    CutInWidget = CreateWidget(GetWorld()->GetFirstPlayerController(), CutInWidgetClass);
+    CutInWidget->AddToViewport(1);
 }

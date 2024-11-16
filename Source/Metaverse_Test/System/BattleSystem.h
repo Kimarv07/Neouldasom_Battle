@@ -16,7 +16,7 @@ class METAVERSE_TEST_API ABattleSystem : public AActor
 	GENERATED_BODY()
 	
 public:	
-	// Sets default values for this actor's properties
+	// Constructor
 	ABattleSystem();
 
 protected:
@@ -39,8 +39,15 @@ protected:
 
 	void IsEndGame();
 
+	//Set Actors
 	UFUNCTION(BlueprintCallable, Category = "SystemSet")
 	void SetBattleEntities(APlayerCharacter* Entity1, AMonsterCharacter* Entity2);
+
+	//Set NPC Actors
+	//UFUNCTION(BlueprintCallable, Category = "SystemSet")
+	//void SetBattleNpcs(APlayerCharacter* Entity1, AMonsterCharacter* Entity2);
+
+	//Set Skills
 	SkillSystem LoadSkillSystem;
 
 	//Set Battle turn
@@ -54,24 +61,16 @@ public:
 	bool IsPlayerTurn;
 
 protected:
+	//Actor
 	APlayerCharacter* PlayerEntity;
 	AMonsterCharacter* MonsterEntity;
 
-	//Skill DataTable loader
-	void SkillDataLoader();
-
-	//Save SkillDataTable
-	UDataTable* BasicSkillData;
-	UDataTable* DepenseSkillData;
-	UDataTable* ExplorationSkillData;
-	UDataTable* NatureSkillData;
-	UDataTable* MedecineSkillData;
-	UDataTable* SomaticSkillData;
 	UDataTable* MonsterSkillData;
 
 public:
 	//Save CurSkillData
 	SubjectClass SkillClass;
+	FSkillInfo* MonsterSkill;
 	FSkillInfo* CurSkill;
 	int CurSubjectPoint;
 	int DependedDamage;
@@ -83,12 +82,14 @@ public:
 	void SkillSystem(SubjectClass Subject, int RowNum);
 
 protected:
+	//플레이어 스킬
 	void AttackSkill();
 	void DepenseSkill();
 	void HealSkill();
 	void SupportSkill();
 	void PracticalSkill();
 
+	//몬스터 스킬
 	void MonsterAttack();
 	void MonsterDepense();
 

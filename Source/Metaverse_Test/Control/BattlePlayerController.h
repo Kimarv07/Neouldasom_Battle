@@ -27,5 +27,11 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "UI")
 	UUserWidget* HUDWidget;
 
+	UPROPERTY(EditAnywhere, Category = "UI")
+	TSubclassOf<UUserWidget> CutInWidgetClass;
+
+	UPROPERTY(EditAnywhere, Category = "UI")
+	UUserWidget* CutInWidget;
+
 	void CreateHUD();
 };

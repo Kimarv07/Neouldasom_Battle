@@ -30,6 +30,7 @@ void UBattleUI::MappingSkills(SubjectClass Subject, int RowNum){
 
 	LoadedSystem->SkillSystem(Subject, RowNum);
 	ShowPassFailCutIn(LoadedSystem->GetSkillIsSucceed());
+	IsSkillSucceed = LoadedSystem->GetSkillIsSucceed();
 	LoadedSystem->EndTurn();
 }
 

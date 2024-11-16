@@ -5,6 +5,49 @@
 #include "YutJudgmentSystem.h"
 
 SkillSystem::SkillSystem(){
+	DataLoder();
+}
+
+void SkillSystem::DataLoder(){
+	BasicSkillData = LoadObject<UDataTable>(nullptr, TEXT("/Game/BattleMap/DataTable/DT_BasicMagic.DT_BasicMagic"));
+	DepenseSkillData = LoadObject<UDataTable>(nullptr, TEXT("/Game/BattleMap/DataTable/DT_DepenseMagic.DT_DepenseMagic"));
+	ExplorationSkillData = LoadObject<UDataTable>(nullptr, TEXT("/Game/BattleMap/DataTable/DT_ExplorationMagic.DT_ExplorationMagic"));
+	NatureSkillData = LoadObject<UDataTable>(nullptr, TEXT("/Game/BattleMap/DataTable/DT_NatureMagic.DT_NatureMagic"));
+	MedecineSkillData = LoadObject<UDataTable>(nullptr, TEXT("/Game/BattleMap/DataTable/DT_OrientalMedicine.DT_OrientalMedicine"));
+	SomaticSkillData = LoadObject<UDataTable>(nullptr, TEXT("/Game/BattleMap/DataTable/DT_SomaticMagic.DT_SomaticMagic"));
+	
+}
+
+FSkillInfo* SkillSystem::FindPlayerSkill(SubjectClass Subject, int RowNum){
+	FName SkillNum = FName(*(FString::FromInt(RowNum)));
+	static const FString SkillDataContextString(TEXT("SkillTableContext"));
+
+	switch (Subject) {
+	case BasicMagic:
+		return BasicSkillData->FindRow<FSkillInfo>(SkillNum, SkillDataContextString, true);
+		break;
+	case DepenseMagic:
+		return DepenseSkillData->FindRow<FSkillInfo>(SkillNum, SkillDataContextString, true);
+		break;
+	case ExplorationMagic:
+		return ExplorationSkillData->FindRow<FSkillInfo>(SkillNum, SkillDataContextString, true);
+		break;
+	case NatureMagic:
+		return NatureSkillData->FindRow<FSkillInfo>(SkillNum, SkillDataContextString, true);
+		break;
+	case OrientalMedecine:
+		return MedecineSkillData->FindRow<FSkillInfo>(SkillNum, SkillDataContextString, true);
+		break;
+	case SomaticMagic:
+		return SomaticSkillData->FindRow<FSkillInfo>(SkillNum, SkillDataContextString, true);
+		break;
+	default:
+		UE_LOG(LogTemp, Warning, TEXT("Subject Not Found!"))
+		return nullptr;
+	}
+}
+
+void SkillSystem::ExecuteSkill(APlayerCharacter* User, AMonsterCharacter* Target, FSkillInfo* Skill){
 
 }
 
@@ -114,6 +157,7 @@ int SkillSystem::AmountExceptionHandling(FSkillInfo* SkillRow){
 		case SB_1D:
 			break;
 		case SB_2:
+			Amount = 2 + 2;
 			break;
 		case SB_3:
 			break;

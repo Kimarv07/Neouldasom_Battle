@@ -7,7 +7,7 @@
 #include "SkillDataTable.h"
 
 /**
- * 
+SkillSystem
  */
  
 UENUM()
@@ -39,10 +39,32 @@ enum EhList {
 	M1_1
 };
 
+class APlayerCharacter;
+class AMonsterCharacter;
+
 class METAVERSE_TEST_API SkillSystem
 {
 public:
+	//Constructor
 	SkillSystem();
+
+	//Load DataTable
+	void DataLoder();
+
+	//Data Table
+	UDataTable* BasicSkillData;
+	UDataTable* DepenseSkillData;
+	UDataTable* ExplorationSkillData;
+	UDataTable* NatureSkillData;
+	UDataTable* MedecineSkillData;
+	UDataTable* SomaticSkillData;
+	UDataTable* MonsterSkillData;
+
+	//Find Skill
+	FSkillInfo* FindPlayerSkill(SubjectClass Subject, int RowNum);
+
+	//
+	void ExecuteSkill(APlayerCharacter* User, AMonsterCharacter* Target, FSkillInfo* Skill);
 
 	int CostMp;
 	int Amount;

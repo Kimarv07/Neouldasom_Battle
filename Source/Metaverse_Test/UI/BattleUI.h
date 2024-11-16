@@ -32,6 +32,14 @@ protected:
 	class UImage* Success;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta = (BindWidgetOptional))
 	class UImage* Fail;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	bool IsSkillSucceed;
+
+	//ÀüÅõ ½Â¸® ÆÐ¹è ÄÆÀÎ
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta = (BindWidgetOptional))
+	class UImage* Win;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta = (BindWidgetOptional))
+	class UImage* Lose;
 
 	//ÀüÅõ ½Â¸® ÆÐ¹è ÄÆÀÎ
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta = (BindWidgetOptional))

@@ -54,7 +54,4 @@ public:
 	void SetMP(int MpCost);
 
 	virtual void BeginPlay() override;
-
-	//
-	SubjectClass* SkillClass;
 };
