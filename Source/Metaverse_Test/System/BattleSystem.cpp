@@ -33,11 +33,6 @@ void ABattleSystem::IsEndGame(){
 		GEngine->AddOnScreenDebugMessage(-1, 7.0f, FColor::Red, FString::Printf(TEXT("Battle End!")));
 		UGameplayStatics::OpenLevel(this, FName(TEXT("/Game/Level/OutSide_2D3DHybrid")));
 	}
-	if (BattleRound == 6) {
-		IsBattleOver = true;
-		GEngine->AddOnScreenDebugMessage(-1, 7.0f, FColor::Red, FString::Printf(TEXT("Battle End!")));
-		UGameplayStatics::OpenLevel(this, FName(TEXT("/Game/Level/OutSide_2D3DHybrid")));
-	}
 }
 
 //Entity ¼³Á¤
@@ -62,10 +57,12 @@ void ABattleSystem::BattleTurnEnemy(){
 	if (SkillPersentageNumber == 0) {
 		FName SkillNum = FName(*(FString::FromInt(1)));
 		MonsterSkill = MonsterSkillData->FindRow<FSkillInfo>(SkillNum, SkillDataContextString, true);
+		MonsterJudgeLimit = 3;
 	}
 	else {
 		FName SkillNum = FName(*(FString::FromInt(2)));
 		MonsterSkill = MonsterSkillData->FindRow<FSkillInfo>(SkillNum, SkillDataContextString, true);
+		MonsterJudgeLimit = 2;
 	}
 	
 	switch (MonsterSkill->SkillType) {
@@ -209,8 +206,9 @@ void ABattleSystem::MonsterAttack(){
 	int damage = FMath::Clamp(LoadSkillSystem.AmountExceptionHandling(CurSkill) - DependedDamage, 0, 50);
 
 	if (cost <= MonsterEntity->GetMP()) {
-		if (MonsterEntity->JudgmentSkill(3)) {
+		if (MonsterEntity->JudgmentSkill(MonsterJudgeLimit)) {
 			PlayerEntity->SetHP(-damage);
+			EffectSystem->SpawnMonsterAttackEffect();
 		}
 
 		MonsterEntity->SetMP(-cost);
@@ -228,7 +226,7 @@ void ABattleSystem::MonsterDepense(){
 	DependedDamage = LoadSkillSystem.AmountExceptionHandling(CurSkill);
 
 	if (cost <= MonsterEntity->GetMP()) {
-		if (MonsterEntity->JudgmentSkill(3)) {
+		if (MonsterEntity->JudgmentSkill(MonsterJudgeLimit)) {
 
 		}
 		MonsterEntity->SetMP(-cost);

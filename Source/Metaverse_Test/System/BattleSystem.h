@@ -8,6 +8,7 @@
 #include "../Character/MonsterCharacter.h"
 #include "SkillDataTable.h"
 #include "SkillSystem.h"
+#include "SkillEffectSystem.h"
 #include "BattleSystem.generated.h"
 
 UCLASS()
@@ -48,7 +49,7 @@ protected:
 	//void SetBattleNpcs(APlayerCharacter* Entity1, AMonsterCharacter* Entity2);
 
 	//Set Skills
-	SkillSystem LoadSkillSystem;
+	class SkillSystem LoadSkillSystem;
 
 	//Set Battle turn
 	UFUNCTION(BlueprintCallable, Category = "BattleTurn")
@@ -70,9 +71,16 @@ protected:
 public:
 	//Save CurSkillData
 	SubjectClass SkillClass;
+	//MonsterSkillData
 	FSkillInfo* MonsterSkill;
+	//MonsterSkillPoint 몬스터 스킬 성공 확률
+	int MonsterJudgeLimit;
+	//PlayerSkillData
 	FSkillInfo* CurSkill;
+	//PlayerSkillSubjectPoint 플레이어 과목기능치
 	int CurSubjectPoint;
+
+
 	int DependedDamage;
 	bool IsSkillSucceed;
 	bool GetSkillIsSucceed();
@@ -82,6 +90,8 @@ public:
 	void SkillSystem(SubjectClass Subject, int RowNum);
 
 protected:
+	class ASkillEffectSystem* EffectSystem;
+
 	//플레이어 스킬
 	void AttackSkill();
 	void DepenseSkill();

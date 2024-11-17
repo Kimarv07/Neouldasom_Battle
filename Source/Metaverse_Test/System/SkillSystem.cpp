@@ -15,7 +15,6 @@ void SkillSystem::DataLoder(){
 	NatureSkillData = LoadObject<UDataTable>(nullptr, TEXT("/Game/BattleMap/DataTable/DT_NatureMagic.DT_NatureMagic"));
 	MedecineSkillData = LoadObject<UDataTable>(nullptr, TEXT("/Game/BattleMap/DataTable/DT_OrientalMedicine.DT_OrientalMedicine"));
 	SomaticSkillData = LoadObject<UDataTable>(nullptr, TEXT("/Game/BattleMap/DataTable/DT_SomaticMagic.DT_SomaticMagic"));
-	
 }
 
 FSkillInfo* SkillSystem::FindPlayerSkill(SubjectClass Subject, int RowNum){

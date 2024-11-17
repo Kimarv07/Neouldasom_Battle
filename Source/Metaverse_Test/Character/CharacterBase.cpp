@@ -23,7 +23,11 @@ void ACharacterBase::InitializeInfo(int H, int D, int C, int W, int F){
 
 int ACharacterBase::GetHP(){return Hp;}
 
+int ACharacterBase::GetMaxHP(){return HpLimit;}
+
 int ACharacterBase::GetMP(){return Mp;}
+
+int ACharacterBase::GetMaxMP(){	return MpLimit;}
 
 void ACharacterBase::SetHP(int HpMount){
 	Hp += HpMount;

@@ -7,10 +7,8 @@
 #include "PlayerCharacter.generated.h"
 
 /**
- * 
+ 전투 레벨 용으로 사용할 플레이어 캐릭터에 대한 정보를 담고 있음.
  */
-
-
 UCLASS()
 class METAVERSE_TEST_API APlayerCharacter : public ACharacterBase
 {
