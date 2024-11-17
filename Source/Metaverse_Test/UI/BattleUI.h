@@ -41,11 +41,5 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta = (BindWidgetOptional))
 	class UImage* Lose;
 
-	//ÀüÅõ ½Â¸® ÆÐ¹è ÄÆÀÎ
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta = (BindWidgetOptional))
-	class UImage* Win;
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta = (BindWidgetOptional))
-	class UImage* Lose;
-
 	void ShowPassFailCutIn(bool IsSucceed);
 };

@@ -208,7 +208,7 @@ void ABattleSystem::MonsterAttack(){
 	if (cost <= MonsterEntity->GetMP()) {
 		if (MonsterEntity->JudgmentSkill(MonsterJudgeLimit)) {
 			PlayerEntity->SetHP(-damage);
-			EffectSystem->SpawnMonsterAttackEffect();
+			//EffectSystem->SpawnMonsterAttackEffect();
 		}
 
 		MonsterEntity->SetMP(-cost);
