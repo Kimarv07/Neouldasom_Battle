@@ -45,17 +45,26 @@ protected:
 	void SetBattleEntities(APlayerCharacter* Entity1, AMonsterCharacter* Entity2);
 
 	//Set NPC Actors
-	//UFUNCTION(BlueprintCallable, Category = "SystemSet")
-	//void SetBattleNpcs(APlayerCharacter* Entity1, AMonsterCharacter* Entity2);
+	UFUNCTION(BlueprintCallable, Category = "SystemSet")
+	void SetBattleNpcs(APlayerCharacter* Entity1, APlayerCharacter* Entity2);
+	
+	//NPC 미 존재시 예외처리용 bool 값
+	bool IsNpcUsed;
 
 	//Set Skills
 	class SkillSystem LoadSkillSystem;
 
 	//Set Battle turn
-	UFUNCTION(BlueprintCallable, Category = "BattleTurn")
+
+	//Set Player Turn
 	void BattleTurnPlayer();
-	UFUNCTION(BlueprintCallable, Category = "BattleTurn")
+
+	//Set Enemy Turn
 	void BattleTurnEnemy();
+
+	//Set NPC Turn
+	void BattleTurnNpc();
+
 public:
 	void EndTurn();
 
@@ -65,6 +74,10 @@ protected:
 	//Actor
 	APlayerCharacter* PlayerEntity;
 	AMonsterCharacter* MonsterEntity;
+
+	//Bind Npc Actors
+	APlayerCharacter* NpcEntity1;
+	APlayerCharacter* NpcEntity2;
 
 	UDataTable* MonsterSkillData;
 
@@ -102,6 +115,10 @@ protected:
 	//몬스터 스킬
 	void MonsterAttack();
 	void MonsterDepense();
+
+	//NPC 스킬
+	void NpcAttack();
+	void NpcHeal();
 
 	//DebugLog
 	void ShowDebugLog();

@@ -11,6 +11,7 @@ ABattleSystem::ABattleSystem(){
 	TotalDamage = 0;
 	IsBattleOver = false;
 	IsPlayerTurn = true;
+	IsNpcUsed = false;
 	BattleRound = 1;
 
 	MonsterSkillData = LoadObject<UDataTable>(nullptr, TEXT("/Game/BattleMap/DataTable/DT_MonsterSkill.DT_MonsterSkill"));
@@ -45,7 +46,12 @@ void ABattleSystem::SetBattleEntities(APlayerCharacter* Entity1, AMonsterCharact
 	}
 }
 
-//void ABattleSystem::SetBattleNpcs(APlayerCharacter* Entity1, AMonsterCharacter* Entity2) {}
+void ABattleSystem::SetBattleNpcs(APlayerCharacter* Entity1, APlayerCharacter* Entity2){
+	NpcEntity1 = Entity1;
+	NpcEntity2 = Entity2;
+
+	IsNpcUsed = true;
+}
 
 void ABattleSystem::BattleTurnPlayer(){ return; }
 
@@ -89,12 +95,45 @@ void ABattleSystem::BattleTurnEnemy(){
 	return;
 }
 
+void ABattleSystem::BattleTurnNpc(){
+	FSkillInfo* NpcSkill;
+	if (PlayerEntity->GetHP() < PlayerEntity->GetMaxHP() / 2) {
+		NpcSkill = LoadSkillSystem.FindPlayerSkill(SubjectClass::OrientalMedecine, 2);
+	}
+	else {
+		NpcSkill = LoadSkillSystem.FindPlayerSkill(SubjectClass::NatureMagic, 3);
+	}
+
+	switch (NpcSkill->SkillType) {
+	case Attack:
+		NpcAttack();
+		break;
+	case Depense:
+		//DepenseSkill();
+		break;
+	case Heal:
+		NpcHeal();
+		break;
+	case Support:
+		//SupportSkill();
+		break;
+	case Practical:
+		//PracticalSkill();
+		break;
+	default:
+		break;
+	}
+}
+
 //턴 끝내고 다음 턴 진행 여부 확인.
 void ABattleSystem::EndTurn(){
 	IsEndGame();
 
 	if (IsPlayerTurn) {
 		IsPlayerTurn = false;
+		if (IsNpcUsed) {
+			BattleTurnNpc();
+		}
 		BattleTurnEnemy();
 	}
 	else {IsPlayerTurn = true;
@@ -234,6 +273,43 @@ void ABattleSystem::MonsterDepense(){
 	else {
 		GEngine->AddOnScreenDebugMessage(-1, 7.0, FColor::Red, "Skill Ready Failed!");
 	}
+
+	ShowDebugLog();
+}
+
+void ABattleSystem::NpcAttack(){
+	int cost = LoadSkillSystem.MpExceptionHandling(CurSkill);
+
+	if (cost <= NpcEntity1->GetMP()) {
+		if (NpcEntity1->JudgmentSubject(SkillClass)) {
+			MonsterEntity->SetHP(-FMath::Clamp(LoadSkillSystem.AmountExceptionHandling(CurSkill) - DependedDamage, 0, 50));
+			IsSkillSucceed = true;
+		}
+		else
+			IsSkillSucceed = false;
+		NpcEntity1->SetMP(-cost);
+	}
+	else {
+		GEngine->AddOnScreenDebugMessage(-1, 7.0, FColor::Red, "Skill Ready Failed!");
+		IsSkillSucceed = false;
+	}
+
+	DependedDamage = 0;
+	ShowDebugLog();
+}
+
+void ABattleSystem::NpcHeal(){
+	int cost = LoadSkillSystem.MpExceptionHandling(CurSkill);
+	int healAmount = LoadSkillSystem.AmountExceptionHandling(CurSkill);
+
+	if (NpcEntity2->JudgmentSubject(SkillClass)) {
+		PlayerEntity->SetHP(healAmount);
+		IsSkillSucceed = true;
+	}
+	else
+		IsSkillSucceed = false;
+	NpcEntity2->SetMP(-cost);
+
 
 	ShowDebugLog();
 }
