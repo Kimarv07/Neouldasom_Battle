@@ -1,28 +1,33 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+ï»¿// Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "System/AI System/BattleChatBotSystem.h"
+#include <iostream>
 #include "Interfaces/IHttpResponse.h"
 
-// Api¶û Key ¸ğµ¨ ÃÊ±âÈ­
-UBattleChatBotSystem::UBattleChatBotSystem() {
-    ApiKey = "Key"; // OpenAI API Å°¸¦ ÀÔ·Â
-    Model = "Model"; // »ç¿ëÇÒ ¸ğµ¨ ÀÌ¸§ ¼³Á¤
-    RoleMessage = TEXT("ÀÌÇÏÀÇ ½ºÅ³À» º¸°í, ½ºÅ³ ¹¦»ç¿¡ ÀÖ´Â ´Ü¾î¸¦ ÃÖ´ëÇÑ »ç¿ëÇÏÁö ¾ÊÀ¸¸é¼­ Ãß»óÀûÀÎ ´Ü¾î¸¦ »ç¿ëÇÏ¿© ±× Àü¿¡ ÀÏ¾î³¯ ¹ıÇÑ »óÈ²À» ¹¦»çÇØÁà.");
-    AssistantResponseText = ""; // ÃÊ±âÈ­
+// Apië‘ Key ëª¨ë¸ ì´ˆê¸°í™”
+UBattleChatBotSystem::UBattleChatBotSystem(const FObjectInitializer& ObjectInitializer)
+:Super(ObjectInitializer.DoNotCreateDefaultSubobject(TEXT("SomeComponent")).DoNotCreateDefaultSubobject(TEXT("SomeOtherComponent"))) {
+
+    ApiKey = ""; // OpenAI API í‚¤ë¥¼ ì…ë ¥
+    Model = "gpt-4o"; // ì‚¬ìš©í•  ëª¨ë¸ ì´ë¦„ ì„¤ì •   
+    AssistantResponseText = ""; // ì´ˆê¸°í™”
+    
+    //í”„ë¡¬í”„íŠ¸ ì €ì¥ ë°ì´í„° í…Œì´ë¸” ë°”ì¸ë”©
+    PromptData = LoadObject<UDataTable>(nullptr, TEXT("/Game/BattleMap/DataTable/DT_PromptData.DT_PromptData"));
 }
 
 void UBattleChatBotSystem::SendMessageToOpenAI(const FString& Message){
-    // HTTP ¿äÃ» °´Ã¼ »ı¼º ¹× ¼³Á¤
+    // HTTP ìš”ì²­ ê°ì²´ ìƒì„± ë° ì„¤ì •
     HttpRequest = FHttpModule::Get().CreateRequest();
     HttpRequest->OnProcessRequestComplete().BindUObject(this, &UBattleChatBotSystem::OnResponseReceived);
 
     HttpRequest->SetURL("https://api.openai.com/v1/chat/completions");
     HttpRequest->SetVerb("POST");
-    HttpRequest->SetHeader("Content-Type", "application/json");
+    HttpRequest->SetHeader("Content-Type", "application/json; charset=utf-8" );
     HttpRequest->SetHeader("Authorization", FString::Printf(TEXT("Bearer %s"), *ApiKey));
 
-    // JSON ¹Ùµğ »ı¼º
+    // JSON ë°”ë”” ìƒì„±
     TSharedPtr<FJsonObject> JsonObject = MakeShareable(new FJsonObject);
     JsonObject->SetStringField("model", Model);
 
@@ -34,46 +39,52 @@ void UBattleChatBotSystem::SendMessageToOpenAI(const FString& Message){
 
     JsonObject->SetArrayField("messages", Messages);
 
-    // JSONÀ» ¹®ÀÚ¿­·Î º¯È¯ÇÏ¿© ¹Ùµğ¿¡ ¼³Á¤
+    // JSONì„ ë¬¸ìì—´ë¡œ ë³€í™˜í•˜ì—¬ ë°”ë””ì— ì„¤ì •
     FString RequestBody;
     TSharedRef<TJsonWriter<>> Writer = TJsonWriterFactory<>::Create(&RequestBody);
     FJsonSerializer::Serialize(JsonObject.ToSharedRef(), Writer);
     HttpRequest->SetContentAsString(RequestBody);
 
-    // ¿äÃ» ½ÇÇà
+    // ìš”ì²­ ì‹¤í–‰
     HttpRequest->ProcessRequest();
 }
 
 void UBattleChatBotSystem::SetPromptMessage(FString SkillDetail){
-    FString MessageSet;
+    FName Rownum = FName(*(FString::FromInt(1)));
+    static const FString PromptDataTableContext(TEXT("PromptDataTableContext"));
+    
+    MessageData = PromptData->FindRow<FPromptData>(Rownum, PromptDataTableContext, true);
+    PromptMessage = MessageData->PromptRole;
+    
+    FString MessageSet = PromptMessage + TEXT("\n\n") + SkillDetail;    // ë©”ì‹œì§€ êµ¬ì„±
 
-    MessageSet = TEXT("");
+    UE_LOG(LogTemp, Log, TEXT("Prompt Message: %s"), *MessageSet);  //ë¡œê·¸ ì¶œë ¥
 
     SendMessageToOpenAI(MessageSet);
 }
 
 void UBattleChatBotSystem::OnResponseReceived(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSucceed){
     if (bWasSucceed && Response->GetResponseCode() == 200) {
-        // JSON ÀÀ´ä ÆÄ½Ì
+        // JSON ì‘ë‹µ íŒŒì‹±
         TSharedPtr<FJsonObject> JsonResponse;
         TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(Response->GetContentAsString());
 
         if (FJsonSerializer::Deserialize(Reader, JsonResponse)) {
-            // OpenAIÀÇ ÀÀ´äÀ» AssistantResponseText¿¡ ÀúÀå
+            // OpenAIì˜ ì‘ë‹µì„ AssistantResponseTextì— ì €ì¥
             AssistantResponseText = JsonResponse->GetArrayField("choices")[0]
                 ->AsObject()->GetObjectField("message")->GetStringField("content");
 
-            // ÀÀ´ä Ãâ·Â (¿¹: ÄÜ¼Ö¿¡ Ãâ·ÂÇÏ°Å³ª UI¿¡ ¿¬°á)
+            // ì‘ë‹µ ì¶œë ¥ (ì˜ˆ: ì½˜ì†”ì— ì¶œë ¥í•˜ê±°ë‚˜ UIì— ì—°ê²°)
             UE_LOG(LogTemp, Log, TEXT("ChatBot Response: %s"), *AssistantResponseText);
         }
     }
     else {
-        // ¿À·ù Ã³¸®
+        // ì˜¤ë¥˜ ì²˜ë¦¬
         UE_LOG(LogTemp, Error, TEXT("Request failed: %s"), *Response->GetContentAsString());
         AssistantResponseText = "Error: Unable to get response from OpenAI.";
     }
 }
 
-FString UBattleChatBotSystem::GetReponse() const{
+FString UBattleChatBotSystem::GetResponse() const{
     return  AssistantResponseText;
 }

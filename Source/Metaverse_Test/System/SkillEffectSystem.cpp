@@ -14,9 +14,9 @@ ASkillEffectSystem::ASkillEffectSystem(){
     if (HealEffectClass.Succeeded()){
         HealEffect = HealEffectClass.Class;
     }
-    static ConstructorHelpers::FClassFinder<AActor> DepenseEffectClass(TEXT("/Game/BattleMap/SkillEffect/HealEffect.HealEffect_C")); // 블루프린트 경로
-    if (DepenseEffectClass.Succeeded()){
-        DepenseEffect = DepenseEffectClass.Class;
+    static ConstructorHelpers::FClassFinder<AActor> DefenseEffectClass(TEXT("/Game/BattleMap/SkillEffect/HealEffect.HealEffect_C")); // 블루프린트 경로
+    if (DefenseEffectClass.Succeeded()){
+        DefenseEffect = DefenseEffectClass.Class;
     }
     static ConstructorHelpers::FClassFinder<APaperZDCharacter> MonsterAttackEffectClass(TEXT("/Game/BattleMap/SkillEffect/MonsterSkill.MonsterSkill")); // 블루프린트 경로
     if (MonsterAttackEffectClass.Succeeded()){
@@ -46,7 +46,7 @@ void ASkillEffectSystem::SpawnPlayerAttackEffect(){
 void ASkillEffectSystem::SpawnPlayerHealEffect(){
 }
 
-void ASkillEffectSystem::SpawnPlayerDepenseEffect(){
+void ASkillEffectSystem::SpawnPlayerDefenseEffect(){
 }
 
 void ASkillEffectSystem::SpawnMonsterAttackEffect() {

@@ -10,7 +10,7 @@ SkillSystem::SkillSystem(){
 
 void SkillSystem::DataLoder(){
 	BasicSkillData = LoadObject<UDataTable>(nullptr, TEXT("/Game/BattleMap/DataTable/DT_BasicMagic.DT_BasicMagic"));
-	DepenseSkillData = LoadObject<UDataTable>(nullptr, TEXT("/Game/BattleMap/DataTable/DT_DepenseMagic.DT_DepenseMagic"));
+	DefenseSkillData = LoadObject<UDataTable>(nullptr, TEXT("/Game/BattleMap/DataTable/DT_DepenseMagic.DT_DepenseMagic"));
 	ExplorationSkillData = LoadObject<UDataTable>(nullptr, TEXT("/Game/BattleMap/DataTable/DT_ExplorationMagic.DT_ExplorationMagic"));
 	NatureSkillData = LoadObject<UDataTable>(nullptr, TEXT("/Game/BattleMap/DataTable/DT_NatureMagic.DT_NatureMagic"));
 	MedecineSkillData = LoadObject<UDataTable>(nullptr, TEXT("/Game/BattleMap/DataTable/DT_OrientalMedicine.DT_OrientalMedicine"));
@@ -25,8 +25,8 @@ FSkillInfo* SkillSystem::FindPlayerSkill(SubjectClass Subject, int RowNum){
 	case BasicMagic:
 		return BasicSkillData->FindRow<FSkillInfo>(SkillNum, SkillDataContextString, true);
 		break;
-	case DepenseMagic:
-		return DepenseSkillData->FindRow<FSkillInfo>(SkillNum, SkillDataContextString, true);
+	case DefenseMagic:
+		return DefenseSkillData->FindRow<FSkillInfo>(SkillNum, SkillDataContextString, true);
 		break;
 	case ExplorationMagic:
 		return ExplorationSkillData->FindRow<FSkillInfo>(SkillNum, SkillDataContextString, true);

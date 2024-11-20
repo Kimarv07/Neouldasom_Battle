@@ -53,7 +53,7 @@ public:
 
 	//Data Table
 	UDataTable* BasicSkillData;
-	UDataTable* DepenseSkillData;
+	UDataTable* DefenseSkillData;
 	UDataTable* ExplorationSkillData;
 	UDataTable* NatureSkillData;
 	UDataTable* MedecineSkillData;

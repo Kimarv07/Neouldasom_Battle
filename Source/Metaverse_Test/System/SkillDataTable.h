@@ -12,7 +12,7 @@
 UENUM()
 enum SubjectClass {
 	BasicMagic,
-	DepenseMagic,
+	DefenseMagic,
 	ExplorationMagic,
 	NatureMagic,
 	OrientalMedecine,
@@ -22,7 +22,7 @@ enum SubjectClass {
 UENUM()
 enum SkillType {
 	Attack,
-	Depense,
+	Defense,
 	Heal,
 	Support,
 	Practical

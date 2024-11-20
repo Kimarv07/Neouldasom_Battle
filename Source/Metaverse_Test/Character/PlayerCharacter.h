@@ -16,7 +16,7 @@ class METAVERSE_TEST_API APlayerCharacter : public ACharacterBase
 	
 protected:
 	int BasicMagicPoint;
-	int DepenseMagicPoint;
+	int DefenseMagicPoint;
 	int SomaticMagicPoint;
 	int NatureMagicPoint;
 	int OrientalMedicinePoint;

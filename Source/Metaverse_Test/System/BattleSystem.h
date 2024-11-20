@@ -8,7 +8,7 @@
 #include "../Character/MonsterCharacter.h"
 #include "SkillDataTable.h"
 #include "SkillSystem.h"
-#include "SkillEffectSystem.h"
+#include "AI System/BattleChatBotSystem.h"
 #include "BattleSystem.generated.h"
 
 UCLASS()
@@ -22,15 +22,6 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
-
-	//Show Total Monster's Damage
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int TotalDamage; 
-
-	UPROPERTY(EditAnywhere, Category="Widget")
-	TSubclassOf<UUserWidget> DamageWidgetClass;
-
-	class Widget* DamageWidget;
 
 	//Set BattleTurn
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
@@ -54,11 +45,16 @@ protected:
 	//Set Skills
 	class SkillSystem LoadSkillSystem;
 
+	//ChatBotSystem for Battle
+	UBattleChatBotSystem* ChatBotSystem;
+
 	//Set Battle turn
 
 	//Set Player Turn
 	void BattleTurnPlayer();
 
+	//Ready for Monster Turn
+	void SetEnemySkill();
 	//Set Enemy Turn
 	void BattleTurnEnemy();
 
@@ -71,8 +67,9 @@ public:
 	bool IsPlayerTurn;
 
 protected:
-	//Actor
+	//Player Actor
 	APlayerCharacter* PlayerEntity;
+	//Monster Actor
 	AMonsterCharacter* MonsterEntity;
 
 	//Bind Npc Actors
@@ -92,10 +89,11 @@ public:
 	FSkillInfo* CurSkill;
 	//PlayerSkillSubjectPoint 플레이어 과목기능치
 	int CurSubjectPoint;
-
-
-	int DependedDamage;
+	//방어치
+	int DefendedDamage;
+	//스킬 성공여부
 	bool IsSkillSucceed;
+	//스킬 성공여부 반환
 	bool GetSkillIsSucceed();
 
 	//System
@@ -103,11 +101,11 @@ public:
 	void SkillSystem(SubjectClass Subject, int RowNum);
 
 protected:
-	class ASkillEffectSystem* EffectSystem;
+
 
 	//플레이어 스킬
 	void AttackSkill();
-	void DepenseSkill();
+	void DefenseSkill();
 	void HealSkill();
 	void SupportSkill();
 	void PracticalSkill();

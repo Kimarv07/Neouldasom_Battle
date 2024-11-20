@@ -5,7 +5,7 @@
 
 void APlayerCharacter::InitializeSubjectSkills(int B, int D, int S, int N, int O, int E) {
 	BasicMagicPoint = B;
-	DepenseMagicPoint = D;
+	DefenseMagicPoint = D;
 	SomaticMagicPoint = S;
 	NatureMagicPoint = N;
 	OrientalMedicinePoint = O;
@@ -21,8 +21,8 @@ bool APlayerCharacter::JudgmentSubject(SubjectClass SkillSubject)
 	case BasicMagic:
 		return System->YutJudgingDefault(BasicMagicPoint);
 		break;
-	case DepenseMagic:
-		return System->YutJudgingDefault(DepenseMagicPoint);
+	case DefenseMagic:
+		return System->YutJudgingDefault(DefenseMagicPoint);
 		break;
 	case ExplorationMagic:
 		return System->YutJudgingDefault(ExplorationMagicPoint);

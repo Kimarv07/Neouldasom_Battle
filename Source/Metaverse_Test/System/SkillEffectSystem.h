@@ -7,8 +7,6 @@
 #include "PaperZDCharacter.h"
 #include "SkillEffectSystem.generated.h"
 
-extern class APaperCharacter;
-
 UCLASS()
 class METAVERSE_TEST_API ASkillEffectSystem : public AActor
 {
@@ -23,12 +21,12 @@ public:
 	//Set HealEffect Actor
 	TSubclassOf<AActor> HealEffect;
 	//Set DepenseEffect Actor
-	TSubclassOf<AActor> DepenseEffect;
+	TSubclassOf<AActor> DefenseEffect;
 	//Set MonsterAttackEffect Actor
 	TSubclassOf<APaperZDCharacter> MonsterAttackEffect;
 
 	void SpawnPlayerAttackEffect();
 	void SpawnPlayerHealEffect();
-	void SpawnPlayerDepenseEffect();
+	void SpawnPlayerDefenseEffect();
 	void SpawnMonsterAttackEffect();
 };
