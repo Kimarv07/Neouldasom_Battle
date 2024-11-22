@@ -6,6 +6,7 @@
 #include "Blueprint/UserWidget.h"
 #include "../System/BattleSystem.h"
 #include "Components/Image.h"
+#include "Components/TextBlock.h"
 #include "BattleUI.generated.h"
 
 /**
@@ -40,6 +41,8 @@ protected:
 	class UImage* Win;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta = (BindWidgetOptional))
 	class UImage* Lose;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta = (BindWidgetOptional))
+	class UTextBlock* HintTextBox;
 
 	void ShowPassFailCutIn(bool IsSucceed);
 };

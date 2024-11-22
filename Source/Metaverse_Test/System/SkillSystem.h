@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "YutJudgmentSystem.h"
+#include "../Character/PlayerCharacter.h"
 #include "SkillDataTable.h"
 
 /**
@@ -70,8 +71,8 @@ public:
 	int Amount;
 
 	//예외처리 함수
-	int MpExceptionHandling(FSkillInfo* SkillRow);
-	int AmountExceptionHandling(FSkillInfo* SkillRow);
+	int MpExceptionHandling(FSkillInfo* SkillRow, APlayerCharacter* Character);
+	int AmountExceptionHandling(FSkillInfo* SkillRow, APlayerCharacter* Character);
 
 	class YutJudgmentSystem LoadedSystem;
 

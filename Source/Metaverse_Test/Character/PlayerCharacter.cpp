@@ -42,3 +42,23 @@ bool APlayerCharacter::JudgmentSubject(SubjectClass SkillSubject)
 	}
 	return false;
 }
+
+int APlayerCharacter::GetSubjectSkills(SubjectClass SkillSubject){
+	switch (SkillSubject)
+	{
+	case BasicMagic:
+		return BasicMagic;
+	case DefenseMagic:
+		return DefenseMagic;
+	case ExplorationMagic:
+		return ExplorationMagic;
+	case NatureMagic:
+		return NatureMagic;
+	case OrientalMedecine:
+		return OrientalMedecine;
+	case SomaticMagic:
+		return SomaticMagic;
+	default:
+		return 0;
+	}
+}

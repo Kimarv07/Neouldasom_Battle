@@ -11,6 +11,7 @@ UBattleUI::UBattleUI(const FObjectInitializer& ObjectInitializer)
 	Fail = Cast<UImage>(GetWidgetFromName(TEXT("Fail")));
 	Win = Cast<UImage>(GetWidgetFromName(TEXT("Success")));
 	Lose = Cast<UImage>(GetWidgetFromName(TEXT("Fail")));
+	//HintTextBox = UTextBlock(GetWidgetFromName(TEXT("Fail")));
 }
 
 void UBattleUI::CallSystem(){
@@ -44,6 +45,5 @@ void UBattleUI::ShowPassFailCutIn(bool IsSucceed){
 	else if(!IsSucceed) {
 		Fail->SetVisibility(ESlateVisibility::Visible);
 	}
-
-
+	//HintTextBox->SetText(FText::FromString("%s"));
 }

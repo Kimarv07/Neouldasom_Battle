@@ -19,10 +19,10 @@ class METAVERSE_TEST_API ABattleSystem : public AActor
 public:	
 	// Constructor
 	ABattleSystem();
-
-protected:
+	UFUNCTION(BlueprintCallable, Category = "SystemSet")
 	virtual void BeginPlay() override;
 
+protected:
 	//Set BattleTurn
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	bool IsBattleOver; 
@@ -76,6 +76,7 @@ protected:
 	APlayerCharacter* NpcEntity1;
 	APlayerCharacter* NpcEntity2;
 
+	//Bind Monster Skill Data Table
 	UDataTable* MonsterSkillData;
 
 public:
@@ -95,14 +96,15 @@ public:
 	bool IsSkillSucceed;
 	//스킬 성공여부 반환
 	bool GetSkillIsSucceed();
+	//ChatGPT Response
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	FString HintResponse;
 
 	//System
 	UFUNCTION(BlueprintCallable, Category = "Battle")
 	void SkillSystem(SubjectClass Subject, int RowNum);
 
 protected:
-
-
 	//플레이어 스킬
 	void AttackSkill();
 	void DefenseSkill();

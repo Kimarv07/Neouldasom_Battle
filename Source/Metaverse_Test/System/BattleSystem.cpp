@@ -22,7 +22,6 @@ void ABattleSystem::BeginPlay(){
 	Super::BeginPlay();
 
 	SetEnemySkill();
-	BattleTurnPlayer();
 }
 
 void ABattleSystem::IsEndGame(){
@@ -72,7 +71,7 @@ void ABattleSystem::SetEnemySkill(){
 		MonsterJudgeLimit = 2;
 	}
 	ChatBotSystem->SetPromptMessage(MonsterSkill->Detail);
-	
+	HintResponse = ChatBotSystem->GetResponse();
 	GEngine->AddOnScreenDebugMessage(-1, 7.0f, FColor::Yellow, ChatBotSystem->GetResponse());
 }
 
@@ -186,11 +185,11 @@ void ABattleSystem::SkillSystem(SubjectClass Subject, int RowNum){
 }
 
 void ABattleSystem::AttackSkill(){
-	int cost = LoadSkillSystem.MpExceptionHandling(CurSkill);
+	int cost = LoadSkillSystem.MpExceptionHandling(CurSkill, PlayerEntity);
 	
 	if (cost <= PlayerEntity->GetMP()) {
 		if (PlayerEntity->JudgmentSubject(SkillClass)) {
-			MonsterEntity->SetHP(-FMath::Clamp(LoadSkillSystem.AmountExceptionHandling(CurSkill) - DefendedDamage, 0, 50));
+			MonsterEntity->SetHP(-FMath::Clamp(LoadSkillSystem.AmountExceptionHandling(CurSkill, PlayerEntity) - DefendedDamage, 0, 50));
 			IsSkillSucceed = true;
 		}
 		else
@@ -207,10 +206,10 @@ void ABattleSystem::AttackSkill(){
 }
 
 void ABattleSystem::DefenseSkill(){
-	int cost = LoadSkillSystem.MpExceptionHandling(CurSkill);
+	int cost = LoadSkillSystem.MpExceptionHandling(CurSkill, PlayerEntity);
 	
 	if (PlayerEntity->JudgmentSubject(SkillClass)) {
-		DefendedDamage = LoadSkillSystem.AmountExceptionHandling(CurSkill);
+		DefendedDamage = LoadSkillSystem.AmountExceptionHandling(CurSkill, PlayerEntity);
 	}
 	PlayerEntity->SetMP(-cost);
 
@@ -218,8 +217,8 @@ void ABattleSystem::DefenseSkill(){
 }
 
 void ABattleSystem::HealSkill(){
-	int cost = LoadSkillSystem.MpExceptionHandling(CurSkill);
-	int healAmount = LoadSkillSystem.AmountExceptionHandling(CurSkill);
+	int cost = LoadSkillSystem.MpExceptionHandling(CurSkill, PlayerEntity);
+	int healAmount = LoadSkillSystem.AmountExceptionHandling(CurSkill, PlayerEntity);
 
 	if (PlayerEntity->JudgmentSubject(SkillClass)) {
 		PlayerEntity->SetHP(healAmount);
@@ -234,7 +233,7 @@ void ABattleSystem::HealSkill(){
 }
 
 void ABattleSystem::SupportSkill(){
-	int cost = LoadSkillSystem.MpExceptionHandling(CurSkill);
+	int cost = LoadSkillSystem.MpExceptionHandling(CurSkill, PlayerEntity);
 
 	PlayerEntity->JudgmentSubject(SkillClass);
 	PlayerEntity->SetMP(-cost);
@@ -243,7 +242,7 @@ void ABattleSystem::SupportSkill(){
 }
 
 void ABattleSystem::PracticalSkill(){
-	int cost = LoadSkillSystem.MpExceptionHandling(CurSkill);
+	int cost = LoadSkillSystem.MpExceptionHandling(CurSkill, PlayerEntity);
 
 	PlayerEntity->JudgmentSubject(SkillClass);
 	PlayerEntity->SetMP(-cost);
@@ -252,8 +251,8 @@ void ABattleSystem::PracticalSkill(){
 }
 
 void ABattleSystem::MonsterAttack(){
-	int cost = LoadSkillSystem.MpExceptionHandling(CurSkill);
-	int damage = FMath::Clamp(LoadSkillSystem.AmountExceptionHandling(CurSkill) - DefendedDamage, 0, 50);
+	int cost = LoadSkillSystem.MpExceptionHandling(CurSkill, PlayerEntity);
+	int damage = FMath::Clamp(LoadSkillSystem.AmountExceptionHandling(CurSkill, nullptr) - DefendedDamage, 0, 50);
 
 	if (cost <= MonsterEntity->GetMP()) {
 		if (MonsterEntity->JudgmentSkill(MonsterJudgeLimit)) {
@@ -272,8 +271,8 @@ void ABattleSystem::MonsterAttack(){
 }
 
 void ABattleSystem::MonsterDepense(){
-	int cost = LoadSkillSystem.MpExceptionHandling(CurSkill);
-	DefendedDamage = LoadSkillSystem.AmountExceptionHandling(CurSkill);
+	int cost = LoadSkillSystem.MpExceptionHandling(CurSkill, nullptr);
+	DefendedDamage = LoadSkillSystem.AmountExceptionHandling(CurSkill, nullptr);
 
 	if (cost <= MonsterEntity->GetMP()) {
 		if (MonsterEntity->JudgmentSkill(MonsterJudgeLimit)) {
@@ -289,11 +288,11 @@ void ABattleSystem::MonsterDepense(){
 }
 
 void ABattleSystem::NpcAttack(){
-	int cost = LoadSkillSystem.MpExceptionHandling(CurSkill);
+	int cost = LoadSkillSystem.MpExceptionHandling(CurSkill, NpcEntity1);
 
 	if (cost <= NpcEntity1->GetMP()) {
 		if (NpcEntity1->JudgmentSubject(SkillClass)) {
-			MonsterEntity->SetHP(-FMath::Clamp(LoadSkillSystem.AmountExceptionHandling(CurSkill) - DefendedDamage, 0, 50));
+			MonsterEntity->SetHP(-FMath::Clamp(LoadSkillSystem.AmountExceptionHandling(CurSkill, NpcEntity1) - DefendedDamage, 0, 50));
 			IsSkillSucceed = true;
 		}
 		else
@@ -310,8 +309,8 @@ void ABattleSystem::NpcAttack(){
 }
 
 void ABattleSystem::NpcHeal(){
-	int cost = LoadSkillSystem.MpExceptionHandling(CurSkill);
-	int healAmount = LoadSkillSystem.AmountExceptionHandling(CurSkill);
+	int cost = LoadSkillSystem.MpExceptionHandling(CurSkill, NpcEntity1);
+	int healAmount = LoadSkillSystem.AmountExceptionHandling(CurSkill, NpcEntity1);
 
 	if (NpcEntity2->JudgmentSubject(SkillClass)) {
 		PlayerEntity->SetHP(healAmount);

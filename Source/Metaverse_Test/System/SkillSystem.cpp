@@ -50,7 +50,7 @@ void SkillSystem::ExecuteSkill(APlayerCharacter* User, AMonsterCharacter* Target
 
 }
 
-int SkillSystem::MpExceptionHandling(FSkillInfo* SkillRow){
+int SkillSystem::MpExceptionHandling(FSkillInfo* SkillRow, APlayerCharacter* Character){
 	CostMp = SkillRow->MpCost;
 
 	UEnum* EnumPtr = StaticEnum<EhList>();
@@ -102,7 +102,7 @@ int SkillSystem::MpExceptionHandling(FSkillInfo* SkillRow){
 	return CostMp;
 }
 
-int SkillSystem::AmountExceptionHandling(FSkillInfo* SkillRow){
+int SkillSystem::AmountExceptionHandling(FSkillInfo* SkillRow, APlayerCharacter* Character){
 	Amount = SkillRow->Amount;
 
 	UEnum* EnumPtr = StaticEnum<EhList>();
@@ -126,7 +126,7 @@ int SkillSystem::AmountExceptionHandling(FSkillInfo* SkillRow){
 			Amount = 100;
 			break;
 		case NI_1A:
-			Amount = SetByJudgement();
+			Amount = SetByJudgement() + Character->GetSubjectSkills(SubjectClass::NatureMagic);
 			break;
 		case NA_1A:
 			Amount = SetByJudgement();

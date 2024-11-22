@@ -28,4 +28,7 @@ public:
 
 	//Judgment
 	bool JudgmentSubject(SubjectClass SkillSubject);
+
+	//Get Subject Skill Amount
+	int GetSubjectSkills(SubjectClass SkillSubject);
 };
