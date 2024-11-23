@@ -12,8 +12,7 @@
 #include "BattleSystem.generated.h"
 
 UCLASS()
-class METAVERSE_TEST_API ABattleSystem : public AActor
-{
+class METAVERSE_TEST_API ABattleSystem : public AActor{
 	GENERATED_BODY()
 	
 public:	
