@@ -58,7 +58,8 @@ protected:
 	void BattleTurnEnemy();
 
 	//Set NPC Turn
-	void BattleTurnNpc();
+	void BattleTurnNpc1();
+	void BattleTurnNpc2();
 
 public:
 	void EndTurn();
@@ -116,8 +117,8 @@ protected:
 	void MonsterDepense();
 
 	//NPC ½ºÅ³
-	void NpcAttack();
-	void NpcHeal();
+	void NpcAttack(APlayerCharacter* NpcEntity);
+	void NpcHeal(APlayerCharacter* NpcEntity, APlayerCharacter* HealEntity);
 
 	//DebugLog
 	void ShowDebugLog();

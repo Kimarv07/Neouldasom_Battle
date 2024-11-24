@@ -19,7 +19,7 @@ class METAVERSE_TEST_API UBattleChatBotSystem : public UObject
 	
 private:
 	UBattleChatBotSystem(const FObjectInitializer& ObjectInitializer);
-	
+
 	//메시지를 전송하고 응답을 처리함
 	UFUNCTION(BlueprintCallable, Category = "ChatBotSystem")
 	void SendMessageToOpenAI(const FString& Message);

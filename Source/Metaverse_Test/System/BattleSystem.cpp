@@ -27,13 +27,17 @@ void ABattleSystem::BeginPlay(){
 void ABattleSystem::IsEndGame(){
 	if (PlayerEntity->Hp <= 0) {
 		IsBattleOver = true;
-		GEngine->AddOnScreenDebugMessage(-1, 7.0f, FColor::Red, FString::Printf(TEXT("Battle End!")));
-		UGameplayStatics::OpenLevel(this, FName(TEXT("/Game/Level/OutSide_2D3DHybrid")));
+		FTimerHandle TimerHandle;
+		GetWorld()->GetTimerManager().SetTimer(TimerHandle, [&](){
+			UGameplayStatics::OpenLevel(this, FName(TEXT("/Game/Level/OutSide_2D3DHybrid")));
+		}, 3, false);
 	}
 	if (MonsterEntity->Hp <= 0) {
 		IsBattleOver = true;
-		GEngine->AddOnScreenDebugMessage(-1, 7.0f, FColor::Red, FString::Printf(TEXT("Battle End!")));
-		UGameplayStatics::OpenLevel(this, FName(TEXT("/Game/Level/OutSide_2D3DHybrid")));
+		FTimerHandle TimerHandle;
+		GetWorld()->GetTimerManager().SetTimer(TimerHandle, [&](){
+			UGameplayStatics::OpenLevel(this, FName(TEXT("/Game/Level/OutSide_2D3DHybrid")));
+		}, 3, false);
 	}
 }
 
@@ -101,7 +105,37 @@ void ABattleSystem::BattleTurnEnemy(){
 	return;
 }
 
-void ABattleSystem::BattleTurnNpc(){
+void ABattleSystem::BattleTurnNpc1(){
+	FSkillInfo* NpcSkill;
+	if (NpcEntity1->GetHP() < NpcEntity1->GetMaxHP() / 2) {
+		NpcSkill = LoadSkillSystem.FindPlayerSkill(SubjectClass::OrientalMedecine, 2);
+	}
+	else {
+		NpcSkill = LoadSkillSystem.FindPlayerSkill(SubjectClass::NatureMagic, 3);
+	}
+
+	switch (NpcSkill->SkillType) {
+	case Attack:
+		NpcAttack(NpcEntity1);
+		break;
+	case Defense:
+		//DepenseSkill();
+		break;
+	case Heal:
+		NpcHeal(NpcEntity1, NpcEntity1);
+		break;
+	case Support:
+		//SupportSkill();
+		break;
+	case Practical:
+		//PracticalSkill();
+		break;
+	default:
+		break;
+	}
+}
+
+void ABattleSystem::BattleTurnNpc2(){
 	FSkillInfo* NpcSkill;
 	if (PlayerEntity->GetHP() < PlayerEntity->GetMaxHP() / 2) {
 		NpcSkill = LoadSkillSystem.FindPlayerSkill(SubjectClass::OrientalMedecine, 2);
@@ -112,13 +146,13 @@ void ABattleSystem::BattleTurnNpc(){
 
 	switch (NpcSkill->SkillType) {
 	case Attack:
-		NpcAttack();
+		NpcAttack(NpcEntity2);
 		break;
 	case Defense:
 		//DepenseSkill();
 		break;
 	case Heal:
-		NpcHeal();
+		NpcHeal(NpcEntity2, PlayerEntity);
 		break;
 	case Support:
 		//SupportSkill();
@@ -138,7 +172,8 @@ void ABattleSystem::EndTurn(){
 	if (IsPlayerTurn) {
 		IsPlayerTurn = false;
 		if (IsNpcUsed) {
-			BattleTurnNpc();
+			BattleTurnNpc1();
+			BattleTurnNpc2();
 		}
 		else {
 			GEngine->AddOnScreenDebugMessage(-1, 7.0f, FColor::Purple, FString::Printf(TEXT("NPC IS NOT USED!")));
@@ -251,12 +286,21 @@ void ABattleSystem::PracticalSkill(){
 }
 
 void ABattleSystem::MonsterAttack(){
-	int cost = LoadSkillSystem.MpExceptionHandling(CurSkill, PlayerEntity);
+	int cost = LoadSkillSystem.MpExceptionHandling(CurSkill, nullptr);
 	int damage = FMath::Clamp(LoadSkillSystem.AmountExceptionHandling(CurSkill, nullptr) - DefendedDamage, 0, 50);
 
 	if (cost <= MonsterEntity->GetMP()) {
 		if (MonsterEntity->JudgmentSkill(MonsterJudgeLimit)) {
-			PlayerEntity->SetHP(-damage);
+			int randomTargeting = FMath::RandRange(0, 2);
+			if (randomTargeting == 0) {
+				PlayerEntity->SetHP(-damage);
+			}
+			else if (randomTargeting == 1) {
+				NpcEntity1->SetHP(-damage);
+			}
+			else if (randomTargeting == 2) {
+				NpcEntity2->SetHP(-damage);
+			}
 			//EffectSystem->SpawnMonsterAttackEffect();
 		}
 
@@ -287,17 +331,17 @@ void ABattleSystem::MonsterDepense(){
 	ShowDebugLog();
 }
 
-void ABattleSystem::NpcAttack(){
-	int cost = LoadSkillSystem.MpExceptionHandling(CurSkill, NpcEntity1);
+void ABattleSystem::NpcAttack(APlayerCharacter* NpcEntity){
+	int cost = LoadSkillSystem.MpExceptionHandling(CurSkill, NpcEntity);
 
-	if (cost <= NpcEntity1->GetMP()) {
-		if (NpcEntity1->JudgmentSubject(SkillClass)) {
-			MonsterEntity->SetHP(-FMath::Clamp(LoadSkillSystem.AmountExceptionHandling(CurSkill, NpcEntity1) - DefendedDamage, 0, 50));
+	if (cost <= NpcEntity->GetMP()) {
+		if (NpcEntity->JudgmentSubject(SkillClass)) {
+			MonsterEntity->SetHP(-FMath::Clamp(LoadSkillSystem.AmountExceptionHandling(CurSkill, NpcEntity) - DefendedDamage, 0, 50));
 			IsSkillSucceed = true;
 		}
 		else
 			IsSkillSucceed = false;
-		NpcEntity1->SetMP(-cost);
+		NpcEntity->SetMP(-cost);
 	}
 	else {
 		GEngine->AddOnScreenDebugMessage(-1, 7.0, FColor::Red, "Skill Ready Failed!");
@@ -308,17 +352,17 @@ void ABattleSystem::NpcAttack(){
 	ShowDebugLog();
 }
 
-void ABattleSystem::NpcHeal(){
-	int cost = LoadSkillSystem.MpExceptionHandling(CurSkill, NpcEntity1);
-	int healAmount = LoadSkillSystem.AmountExceptionHandling(CurSkill, NpcEntity1);
+void ABattleSystem::NpcHeal(APlayerCharacter* NpcEntity, APlayerCharacter* HealEntity){
+	int cost = LoadSkillSystem.MpExceptionHandling(CurSkill, NpcEntity);
+	int healAmount = LoadSkillSystem.AmountExceptionHandling(CurSkill, NpcEntity);
 
-	if (NpcEntity2->JudgmentSubject(SkillClass)) {
-		PlayerEntity->SetHP(healAmount);
+	if (NpcEntity->JudgmentSubject(SkillClass)) {
+		HealEntity->SetHP(healAmount);
 		IsSkillSucceed = true;
 	}
 	else
 		IsSkillSucceed = false;
-	NpcEntity2->SetMP(-cost);
+	NpcEntity->SetMP(-cost);
 
 
 	ShowDebugLog();

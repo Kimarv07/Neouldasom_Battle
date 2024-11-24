@@ -16,8 +16,7 @@ bool APlayerCharacter::JudgmentSubject(SubjectClass SkillSubject)
 {
 	YutJudgmentSystem* System = new YutJudgmentSystem;
 	
-	switch (SkillSubject)
-	{
+	switch (SkillSubject){
 	case BasicMagic:
 		return System->YutJudgingDefault(BasicMagicPoint);
 		break;

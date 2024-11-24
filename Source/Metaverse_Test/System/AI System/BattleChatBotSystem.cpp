@@ -5,7 +5,7 @@
 #include "Interfaces/IHttpResponse.h"
 
 // Api랑 Key 모델 초기화
-UBattleChatBotSystem::UBattleChatBotSystem(const FObjectInitializer& ObjectInitializer)
+UBattleChatBotSystem::UBattleChatBotSystem(const FObjectInitializer& ObjectInitializer) 
 :Super(ObjectInitializer.DoNotCreateDefaultSubobject(TEXT("SomeComponent")).DoNotCreateDefaultSubobject(TEXT("SomeOtherComponent"))) {
 
     ApiKey = ""; // OpenAI API 키를 입력
