@@ -49,17 +49,18 @@ void UBattleChatBotSystem::SendMessageToOpenAI(const FString& Message){
 }
 
 void UBattleChatBotSystem::SetPromptMessage(FString SkillDetail){
-    FName Rownum = FName(*(FString::FromInt(1)));
+     //Find Prompt Message from DataTable 
+    FName Rownum = FName(*(FString::FromInt(1))); //Row N0.1 : BattleSystem Role / 징조파악 시스템 설명
     static const FString PromptDataTableContext(TEXT("PromptDataTableContext"));
     
-    MessageData = PromptData->FindRow<FPromptData>(Rownum, PromptDataTableContext, true);
+    MessageData = PromptData->FindRow<FPromptData>(Rownum, PromptDataTableContext, true); //Set Prompt Data
     PromptMessage = MessageData->PromptRole;
     
-    FString MessageSet = PromptMessage + TEXT("\n\n") + SkillDetail;    // 메시지 구성
+    FString MessageSet = PromptMessage + TEXT("\n\n") + SkillDetail;    //Set Message Data -> Use in LLM
 
-    UE_LOG(LogTemp, Log, TEXT("Prompt Message: %s"), *MessageSet);  //로그 출력
+    UE_LOG(LogTemp, Log, TEXT("Prompt Message: %s"), *MessageSet);  //Print Log Message
 
-    SendMessageToOpenAI(MessageSet);
+    SendMessageToOpenAI(MessageSet); //Send Message to LLM
 }
 
 void UBattleChatBotSystem::OnResponseReceived(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSucceed){
